@@ -1,5 +1,12 @@
 <resources>
-    <string name="app_name" translatable="false">FootScan Blue</string>
+    <string name="app_name" translatable="false">Podoscope</string>
+    <string name="scan_butt_name">Сканирование</string>
+    <string name="exit_name">Выход</string>
+    <string name="scan_final_go_home">Сканирование завершено с устройства можно сойти</string>
     <string name="forun_ste" translatable="false">Соединение нет. Устанавливаем его</string>
-    <string name="ok_ok" translatable="false">Соединение установлено. Можно посылать команды</string>
+    <string name="ok_ok" translatable="false">Соединение установлено. Можно сканировать.</string>
+    <string name="getting_iage" translatable="false">Соединение установлено. Идёт получение изображения</string>
+    <string name="ok_success_load_iad" translatable="false">Соединение установлено. Изображение успешно загружено</string>
+    <string name="ok_device_conn" translatable="false">Связь с аппаратом установлена - можно работать !</string>
+    <string name="please_wait" translatable="false">Команда отправлена. Идёт сбор данных.</string>
 </resources>

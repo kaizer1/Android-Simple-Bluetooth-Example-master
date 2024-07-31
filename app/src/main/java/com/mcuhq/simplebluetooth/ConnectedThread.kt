@@ -1,90 +1,69 @@
-package com.mcuhq.simplebluetooth;
+package com.mcuhq.simplebluetooth
 
-import android.app.DialogFragment;
-import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.util.Log;
+import android.bluetooth.BluetoothSocket
+import android.os.Handler
+import android.os.SystemClock
+import android.util.Log
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
-import org.json.JSONObject;
+class ConnectedThread(private val mmSocket: BluetoothSocket, private val mHandler: Handler) :
+    Thread() {
+    private val mmInStream: InputStream?
+    private val mmOutStream: OutputStream?
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-public class ConnectedThread extends Thread {
-    private final BluetoothSocket mmSocket;
-    private final InputStream mmInStream;
-    private final OutputStream mmOutStream;
-    private final Handler mHandler;
-
-    public ConnectedThread(BluetoothSocket socket, Handler handler) {
-        mmSocket = socket;
-        mHandler = handler;
-        InputStream tmpIn = null;
-        OutputStream tmpOut = null;
+    init {
+        var tmpIn: InputStream? = null
+        var tmpOut: OutputStream? = null
 
         try {
-            tmpIn = socket.getInputStream();
-            tmpOut = socket.getOutputStream();
-        } catch (IOException e) { }
+            tmpIn = mmSocket.inputStream
+            tmpOut = mmSocket.outputStream
+        } catch (e: IOException) {
+        }
 
-        mmInStream = tmpIn;
-        mmOutStream = tmpOut;
+        mmInStream = tmpIn
+        mmOutStream = tmpOut
     }
 
-   // @Override
-    public void run() {
-        byte[] buffer = new byte[1024];
-        int bytes;
+    // @Override
+    override fun run() {
+        var buffer = ByteArray(1024)
+        var bytes: Int
 
-         Log.d("df", " in a RUN ! ");
         while (true) {
-            Log.d("df", " try connect ! ");
             try {
 
 
-                
-                //bytes = mmInStream.available();
-                //Log.d("df", " Bytes size " + bytes);
-                //if(bytes != 0) {
+                buffer = ByteArray(512)
+                    //SystemClock.sleep(1)
+                bytes = mmInStream!!.read(buffer)
+                mHandler.obtainMessage(MainActivity.MESSAGE_READ, bytes, -1, buffer)
+                    .sendToTarget()
 
-
-                    Log.d("df", " byte is not null ");
-                    buffer = new byte[1024];
-                    SystemClock.sleep(100);
-
-                //    bytes = mmInStream.available();
-
-                   // bytes = mmInStream.read(buffer, 0, bytes);
-                    bytes = mmInStream.read(buffer);
-                    mHandler.obtainMessage(MainActivity.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
-
-                    Log.d("df", " ok read answer ! ");
-                //}
-            } catch (IOException e) {
-                e.printStackTrace();
-                   Log.d("df", " fail to read asnwer ");
-                break;
-              }
-             }
-        Log.d("df", " while end's ");
-    }
-
-
-    public void write(String input) {
-        byte[] bytes = input.getBytes();
-        try {
-            mmOutStream.write(bytes);
-        } catch (IOException e) {
-            Log.d("df", " write ERROR! ");
+            } catch (e: IOException) {
+                e.printStackTrace()
+                Log.d("df", " fail to read asnwer " + e.localizedMessage)
+                break
+            }
         }
     }
 
-    public void cancel() {
+
+    fun write(input: String) {
+        val bytes = input.toByteArray()
         try {
-            mmSocket.close();
-        } catch (IOException e) { }
+            mmOutStream!!.write(bytes)
+        } catch (e: IOException) {
+            Log.d("df", " write ERROR! " + e.localizedMessage)
+        }
+    }
+
+    fun cancel() {
+        try {
+            mmSocket.close()
+        } catch (e: IOException) {
+        }
     }
 }

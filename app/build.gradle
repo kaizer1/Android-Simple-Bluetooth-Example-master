@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdk 27
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.mcuhq.simplebluetooth"
         minSdkVersion 21
-        targetSdk 27
+        targetSdk 34
         versionCode 1
         versionName "1.0"
     }
@@ -19,13 +20,32 @@ android {
     lint {
         abortOnError false
     }
+
+      compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
+
+
     namespace 'com.mcuhq.simplebluetooth'
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.auth0.android:jwtdecode:2.0.2'
+    implementation 'androidx.core:core-ktx:1.13.1'
+    testImplementation 'junit:junit:4.13.2'
+    //implementation 'com.auth0.android:jwtdecode:2.0.2'
+   // implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+     //val appcompat_version = "1.7.0"
 
-    implementation 'com.android.support:appcompat-v7:23.3.0'
+
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    // For loading and tinting drawables on older versions of the platform
+    //implementation("androidx.appcompat:appcompat-resources:1.3.0")
 }
